@@ -1,1 +1,11 @@
-Substitua apenas index.html no GitHub. O botão Imprimir abre um PDF A4 individual, sem valores, com pedido, data, destino, status, quem enviou, produtos, códigos, quantidades e total. Faça Ctrl+F5 após o deploy. Se necessário, permita pop-ups.
+ALTERAÇÕES DESTA VERSÃO
+- Removido o botão/aba "Relatórios" do topo.
+- O botão "Imprimir" de cada pedido continua gerando o PDF individual.
+- No PDF, o título ENVIOCD foi substituído pela logo oficial CERÊNNIA enviada.
+- Mantidos número do pedido, data, destino, status, responsável, produtos, códigos e quantidades.
+- Nenhum valor financeiro foi incluído.
+- A logo foi incorporada dentro do próprio index.html; não é necessário enviar a imagem separadamente.
+
+NO GITHUB:
+Substitua somente o arquivo index.html.
+Aguarde o deployment ficar verde e depois pressione Ctrl+F5.
