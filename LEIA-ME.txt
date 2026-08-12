@@ -1,22 +1,23 @@
-ENVIOCD — VERSÃO FINAL COM 2 LOGINS
+ENVIOCD — VISTORIA E RELATÓRIO POR PEDIDO
 
-Perfis fixos:
-1. ADMIN: victorlopesgmz122@gmail.com
-2. CD: cerennialogistica@gmail.com
+ALTERAÇÕES:
+- Cada pedido agora tem botão próprio "Imprimir pedido".
+- A aba Relatórios/Arquivo de Pedidos localiza pedidos por período e destino.
+- Cada resultado tem "Imprimir este pedido".
+- A impressão gera uma folha individual com:
+  número do pedido, responsável, destino, data/hora, status,
+  usuário que registrou, usuário que recebeu, produtos, códigos,
+  quantidades, total e campos de assinatura.
+- Pedidos não possuem botão de exclusão.
+- Regras do Firestore bloqueiam definitivamente DELETE em pedidos.
+- Dados originais de um pedido (número, responsável, destino, data/hora,
+  itens e autoria) não podem ser alterados após a criação.
+- Status de recebimento/cancelamento pode continuar sendo atualizado.
+- Usuários operacionais e acessos também não podem ser apagados pelas regras.
+- A configuração Firebase/API Key que já está funcionando foi preservada.
 
-IMPORTANTE:
-- As senhas NÃO ficam gravadas no HTML. Elas permanecem no Firebase Authentication.
-- O login agora usa Firebase E-mail/Senha.
-- Não usa autenticação anônima.
-- ADMIN tem Dashboard, Novo envio, Pedidos, Produtos e Usuários.
-- CD tem Dashboard, Novo envio e Pedidos, incluindo operações destinadas a CD e Rota.
-- Não existe terceiro perfil de login.
-- No primeiro login de cada conta, o sistema cria automaticamente o documento correspondente na coleção "acessos".
-
-GITHUB:
-Envie index.html, computador.html e celular.html para a raiz do repositório.
-
-FIRESTORE:
-Na aba Regras, use o conteúdo de firestore.rules e publique.
-
-Depois aguarde o GitHub Pages concluir o novo deployment e teste em janela anônima/privada.
+PUBLICAÇÃO:
+1. Substitua index.html no GitHub.
+2. computador.html e celular.html podem ser substituídos também (redirecionam ao index).
+3. No Firebase > Firestore > Regras, cole o conteúdo de firestore.rules e publique.
+4. Aguarde o GitHub Pages finalizar o deploy e faça Ctrl+F5.
