@@ -1,0 +1,22 @@
+ENVIOCD — VERSÃO FINAL COM 2 LOGINS
+
+Perfis fixos:
+1. ADMIN: victorlopesgmz122@gmail.com
+2. CD: cerennialogistica@gmail.com
+
+IMPORTANTE:
+- As senhas NÃO ficam gravadas no HTML. Elas permanecem no Firebase Authentication.
+- O login agora usa Firebase E-mail/Senha.
+- Não usa autenticação anônima.
+- ADMIN tem Dashboard, Novo envio, Pedidos, Produtos e Usuários.
+- CD tem Dashboard, Novo envio e Pedidos, incluindo operações destinadas a CD e Rota.
+- Não existe terceiro perfil de login.
+- No primeiro login de cada conta, o sistema cria automaticamente o documento correspondente na coleção "acessos".
+
+GITHUB:
+Envie index.html, computador.html e celular.html para a raiz do repositório.
+
+FIRESTORE:
+Na aba Regras, use o conteúdo de firestore.rules e publique.
+
+Depois aguarde o GitHub Pages concluir o novo deployment e teste em janela anônima/privada.
