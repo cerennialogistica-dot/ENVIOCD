@@ -1,8 +1,1 @@
-ALTERAÇÃO SOLICITADA
-- Removida a aba Relatórios.
-- Em Pedidos, cada pedido tem botão IMPRIMIR ao lado do status RECEBIDO/AGUARDANDO/CANCELADO.
-- O botão imprime somente aquele envio.
-- Histórico e proteção contra exclusão foram mantidos.
-- Firebase/API Key não foram alterados.
-
-Substitua o index.html no GitHub e faça Ctrl+F5 após o deploy ficar verde.
+Substitua apenas index.html no GitHub. O botão Imprimir abre um PDF A4 individual, sem valores, com pedido, data, destino, status, quem enviou, produtos, códigos, quantidades e total. Faça Ctrl+F5 após o deploy. Se necessário, permita pop-ups.

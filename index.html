@@ -17,6 +17,7 @@ header{background:#fff;border-bottom:1px solid #ddd;padding:13px 18px;position:s
 <section id="usuarios" class="view"><div class="grid2"><div class="card"><h2>Usuário operacional</h2><label>Nome</label><input id="un"><button id="addU" class="btn primary">Cadastrar</button></div><div class="card"><h2>Usuários operacionais</h2><div id="ulist"></div></div></div></section>
 
 </main></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script type="module">
 import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
@@ -72,4 +73,29 @@ function renderU(){ulist.innerHTML=usuarios.length?'<table><tr><th>Nome</th><th>
 function badge(s){return s==='RECEBIDO'?'ok':s==='CANCELADO'?'cancel':'wait'}function total(p){return(p.itens||[]).reduce((s,i)=>s+(+i.quantidade||0),0)}function renderOrders(){let z=(f.value||'').toLowerCase(),a=pedidos.filter(p=>(p.numero+' '+p.usuario+' '+p.destino+' '+(p.itens||[]).map(i=>i.codigo+' '+i.nome).join(' ')).toLowerCase().includes(z));orders.innerHTML=a.length?a.map(p=>`<article class="card order"><div class="row between"><div><h3>${esc(p.numero)}</h3><div class="muted">${esc(p.usuario)} • ${esc(p.dataHora)} • ${esc(p.destino)}</div></div><div class="row" style="gap:8px;align-items:center"><span class="badge ${badge(p.status)}">${esc(p.status)}</span><button class="btn secondary imp" data-id="${p.id}" style="padding:7px 12px">Imprimir</button></div></div><div class="tablewrap"><table><tr><th>Código</th><th>Produto</th><th>Qtd.</th></tr>${(p.itens||[]).map(i=>`<tr><td>${esc(i.codigo)}</td><td>${esc(i.nome)}</td><td><b>${i.quantidade}</b></td></tr>`).join('')}</table></div><div class="summary"><b>Total: ${total(p)}</b></div>${p.status==='AGUARDANDO RECEBIMENTO'?`<div class="row" style="margin-top:12px"><button class="btn primary rec" data-id="${p.id}">Confirmar recebimento</button><button class="btn danger can" data-id="${p.id}">Cancelar</button></div>`:''}</article>`).join(''):'<div class="card empty">Nenhum pedido.</div>';orders.querySelectorAll('.imp').forEach(b=>b.onclick=()=>imprimirPedido(b.dataset.id));orders.querySelectorAll('.rec').forEach(b=>b.onclick=async()=>updateDoc(doc(db,'pedidos',b.dataset.id),{status:'RECEBIDO',recebidoPor:meuPerfil.nome,recebidoEm:new Date().toLocaleString('pt-BR')}));orders.querySelectorAll('.can').forEach(b=>b.onclick=async()=>{let m=prompt('Motivo do cancelamento:');if(m)await updateDoc(doc(db,'pedidos',b.dataset.id),{status:'CANCELADO',motivoCancelamento:m,canceladoEm:new Date().toLocaleString('pt-BR')})})}f.oninput=renderOrders;
 
 function renderDash(){let hoje=new Date().toLocaleDateString('pt-BR'),ativos=pedidos.filter(p=>p.status!=='CANCELADO');kh.textContent=ativos.filter(p=>(p.dataHora||'').startsWith(hoje)).length;ka.textContent=pedidos.filter(p=>p.status==='AGUARDANDO RECEBIMENTO').length;kr.textContent=pedidos.filter(p=>p.status==='RECEBIDO').length;kc.textContent=ativos.filter(p=>p.destino==='CD').reduce((s,p)=>s+total(p),0);kro.textContent=ativos.filter(p=>p.destino==='PRODUTOS PARA ROTA').reduce((s,p)=>s+total(p),0);recent.innerHTML=pedidos.slice(0,5).map(p=>`<div style="padding:9px;border-bottom:1px solid #ddd"><b>${esc(p.numero)} • ${esc(p.destino)}</b> <span class="badge ${badge(p.status)}">${esc(p.status)}</span><div class="muted">${esc(p.usuario)} • ${esc(p.dataHora)} • ${total(p)} unidades</div></div>`).join('')||'<div class="muted">Nenhum pedido.</div>'}
+
+window.imprimirPedido=async function(id){
+ const p=pedidos.find(x=>x.id===id); if(!p)return alert('Pedido não encontrado.');
+ if(!window.jspdf)return alert('Não foi possível carregar o gerador de PDF.');
+ const {jsPDF}=window.jspdf,pdf=new jsPDF({unit:'mm',format:'a4'}),M=10,R=200;let y=10;
+ const L=yy=>pdf.line(M,yy,R,yy);
+ const T=(t,x,yy,z=9,b=false,a='left')=>{pdf.setFont('helvetica',b?'bold':'normal');pdf.setFontSize(z);pdf.text(String(t??''),x,yy,{align:a})};
+ const S=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+ T('ENVIOCD',M,15,15,true);T('COMPROVANTE DE ENVIO',R,15,11,true,'right');y=20;L(y);y=27;
+ T('PEDIDO Nº:',M,y,9,true);T(S(p.numero),35,y,10,true);T('Data:',125,y,9,true);T(S(p.dataHora),R,y,9,false,'right');y+=7;
+ T('Destino:',M,y,9,true);T(S(p.destino),35,y);T('Status:',125,y,9,true);T(S(p.status),R,y,9,false,'right');y+=7;
+ T('Enviado por:',M,y,9,true);T(S(p.usuario||p.criadoPorLogin),35,y);y+=6;
+ if(p.recebidoPor){T('Recebido por:',M,y,9,true);T(S(p.recebidoPor),35,y);y+=6}
+ L(y);y+=7;T('Quant.',M+2,y,8,true);T('Código',M+24,y,8,true);T('Produto',M+50,y,8,true);y+=3;L(y);y+=7;
+ let totalQtd=0;
+ for(const i of (p.itens||[])){
+   const q=Number(i.quantidade||0);totalQtd+=q;const ls=pdf.splitTextToSize(S(i.nome),105),h=Math.max(7,ls.length*4.2+2);
+   if(y+h>270){pdf.addPage();y=15;T('Quant.',M+2,y,8,true);T('Código',M+24,y,8,true);T('Produto',M+50,y,8,true);y+=3;L(y);y+=7}
+   T(q.toLocaleString('pt-BR'),M+2,y);T(S(i.codigo),M+24,y);pdf.setFont('helvetica','normal');pdf.setFontSize(9);pdf.text(ls,M+50,y);y+=h;
+ }
+ L(y);y+=8;T('Quantidade total:',M,y,10,true);T(totalQtd.toLocaleString('pt-BR'),50,y,10,true);y+=7;
+ T('Data do envio:',M,y,9,true);T(S(p.dataHora),38,y);y+=7;T('Quem enviou:',M,y,9,true);T(S(p.usuario||p.criadoPorLogin),38,y);y+=16;
+ if(y>250){pdf.addPage();y=25}pdf.line(25,y,90,y);pdf.line(120,y,185,y);T('Assinatura de quem enviou',57.5,y+5,8,false,'center');T('Assinatura de quem recebeu',152.5,y+5,8,false,'center');
+ const url=URL.createObjectURL(pdf.output('blob'));const w=window.open(url,'_blank');if(!w)alert('Permita pop-ups para abrir o PDF.');setTimeout(()=>URL.revokeObjectURL(url),60000);
+};
 </script></body></html>
