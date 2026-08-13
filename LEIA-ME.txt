@@ -1,16 +1,15 @@
-VERSÃO COM CÓDIGO DE BARRAS
+CORREÇÃO DO CÓDIGO DE BARRAS
 
-- Foram carregadas 151 descrições/códigos de barras da planilha COD.xlsx.
-- Produtos cujo nome coincide exatamente com a planilha recebem o código de barras automaticamente no Firebase.
-- Cadastro de produto agora possui campo Código de barras.
-- Código de barras duplicado é bloqueado.
-- Na lista de produtos aparece o código de barras e o ADMIN pode corrigir/adicionar manualmente.
-- O PDF de cada envio imprime um código de barras bipável para cada produto.
-- Pedidos antigos também tentam localizar o código de barras pelo cadastro atual do produto.
-- Produto sem correspondência exata fica marcado como SEM CÓDIGO DE BARRAS no PDF, evitando associar um código errado.
-- Nenhum pedido/histórico foi apagado.
+- EAN-13 agora é gerado como EAN-13 real quando o código tem 13 dígitos válidos.
+- EAN-8 é gerado como EAN-8 real quando aplicável.
+- Outros comprimentos continuam usando CODE128.
+- Barras ficaram mais largas e mais altas.
+- Foi adicionada margem branca ("quiet zone") maior ao redor do código.
+- A imagem no PDF ficou maior para evitar compressão das barras.
+- O sistema valida o dígito verificador de EAN-13 e EAN-8 ao cadastrar/editar.
+- Não houve alteração no Firebase, nos pedidos ou no histórico.
 
 ATUALIZAÇÃO:
 Substitua somente index.html no GitHub.
-Aguarde o deployment verde e pressione Ctrl+F5.
-A geração visual do código usa a biblioteca JsBarcode carregada pela internet.
+Aguarde o deployment ficar verde e pressione Ctrl+F5.
+Teste o PDF impresso em escala 100% / tamanho real, sem "Ajustar à página".
