@@ -1,11 +1,16 @@
-ALTERAÇÕES DESTA VERSÃO
-- Removido o botão/aba "Relatórios" do topo.
-- O botão "Imprimir" de cada pedido continua gerando o PDF individual.
-- No PDF, o título ENVIOCD foi substituído pela logo oficial CERÊNNIA enviada.
-- Mantidos número do pedido, data, destino, status, responsável, produtos, códigos e quantidades.
-- Nenhum valor financeiro foi incluído.
-- A logo foi incorporada dentro do próprio index.html; não é necessário enviar a imagem separadamente.
+VERSÃO COM CÓDIGO DE BARRAS
 
-NO GITHUB:
-Substitua somente o arquivo index.html.
-Aguarde o deployment ficar verde e depois pressione Ctrl+F5.
+- Foram carregadas 151 descrições/códigos de barras da planilha COD.xlsx.
+- Produtos cujo nome coincide exatamente com a planilha recebem o código de barras automaticamente no Firebase.
+- Cadastro de produto agora possui campo Código de barras.
+- Código de barras duplicado é bloqueado.
+- Na lista de produtos aparece o código de barras e o ADMIN pode corrigir/adicionar manualmente.
+- O PDF de cada envio imprime um código de barras bipável para cada produto.
+- Pedidos antigos também tentam localizar o código de barras pelo cadastro atual do produto.
+- Produto sem correspondência exata fica marcado como SEM CÓDIGO DE BARRAS no PDF, evitando associar um código errado.
+- Nenhum pedido/histórico foi apagado.
+
+ATUALIZAÇÃO:
+Substitua somente index.html no GitHub.
+Aguarde o deployment verde e pressione Ctrl+F5.
+A geração visual do código usa a biblioteca JsBarcode carregada pela internet.
