@@ -1,15 +1,17 @@
-CORREÇÃO DO CÓDIGO DE BARRAS
+CORREÇÃO 2 — LEITURA DO CÓDIGO DE BARRAS
 
-- EAN-13 agora é gerado como EAN-13 real quando o código tem 13 dígitos válidos.
-- EAN-8 é gerado como EAN-8 real quando aplicável.
-- Outros comprimentos continuam usando CODE128.
-- Barras ficaram mais largas e mais altas.
-- Foi adicionada margem branca ("quiet zone") maior ao redor do código.
-- A imagem no PDF ficou maior para evitar compressão das barras.
-- O sistema valida o dígito verificador de EAN-13 e EAN-8 ao cadastrar/editar.
-- Não houve alteração no Firebase, nos pedidos ou no histórico.
+Diagnóstico da planilha COD.xlsx:
+- 117 códigos possuem 13 dígitos e todos os 117 passam no dígito verificador EAN-13.
+- Há também registros de 2 e 3 dígitos na coluna "Código Barra"; esses números NÃO são códigos de barras EAN e não podem ser transformados em um EAN bipável sem o GTIN/EAN real do produto.
+- Há 3 códigos de 14 dígitos, tratados como CODE128 nesta versão.
 
-ATUALIZAÇÃO:
-Substitua somente index.html no GitHub.
-Aguarde o deployment ficar verde e pressione Ctrl+F5.
-Teste o PDF impresso em escala 100% / tamanho real, sem "Ajustar à página".
+Correção técnica:
+- EAN-13 verdadeiro para os 117 GTINs válidos.
+- Renderização em canvas de alta resolução.
+- PDF sem esticar o raster: largura física aproximada de 42 mm.
+- Quiet zones brancas ampliadas.
+- Códigos curtos não geram mais uma barra falsa.
+
+PUBLICAÇÃO:
+Substitua somente index.html no GitHub, aguarde o deploy verde e faça Ctrl+F5.
+Para validar, teste primeiro um produto cujo código comece com 789 e tenha 13 dígitos.

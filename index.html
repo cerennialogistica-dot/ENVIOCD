@@ -99,26 +99,28 @@ function barcodePng(codigo){
  try{
    codigo=String(codigo||'').replace(/\D/g,'');
    if(!codigo||!window.JsBarcode)return '';
-   let formato='CODE128';
+   let formato='';
    if(codigo.length===13&&ean13ChecksumOk(codigo))formato='EAN13';
    else if(codigo.length===8&&ean8ChecksumOk(codigo))formato='EAN8';
+   else if(codigo.length>=8)formato='CODE128';
+   else return '';
 
+   // Canvas em alta resolução. Não esticamos a imagem no PDF.
    const cv=document.createElement('canvas');
-   // Barras largas, alto contraste e "quiet zone" ampla para leitores físicos.
    JsBarcode(cv,codigo,{
      format:formato,
      displayValue:true,
-     textAlign:'center',
-     textPosition:'bottom',
      font:'Arial',
-     fontSize:20,
-     textMargin:5,
-     height:90,
-     width:3,
-     margin:18,
+     fontSize:28,
+     textMargin:6,
+     height:120,
+     width:4,
+     marginLeft:40,
+     marginRight:40,
+     marginTop:10,
+     marginBottom:10,
      background:'#ffffff',
-     lineColor:'#000000',
-     flat:true
+     lineColor:'#000000'
    });
    return cv.toDataURL('image/png',1.0);
  }catch(e){console.error('Código de barras:',e);return ''}
@@ -186,7 +188,7 @@ window.imprimirPedido=async function(id){
  let totalQtd=0;
  for(const i of (p.itens||[])){
    const q=Number(i.quantidade||0);totalQtd+=q;
-   const bc=barcodeAtual(i),ls=pdf.splitTextToSize(S(i.nome),95),barcodeH=bc?28:0,h=Math.max(12,ls.length*4.2+barcodeH+6);
+   const bc=barcodeAtual(i),ls=pdf.splitTextToSize(S(i.nome),95),barcodeH=bc?31:0,h=Math.max(12,ls.length*4.2+barcodeH+6);
    if(y+h>270){pdf.addPage();y=15;T('Código',M+2,y,8,true);T('Quant.',M+28,y,8,true);T('Produto',M+50,y,8,true);y+=3;L(y);y+=7}
    T(S(i.codigo),M+2,y);T(q.toLocaleString('pt-BR'),M+28,y);pdf.setFont('helvetica','normal');pdf.setFontSize(9);pdf.text(ls,M+50,y);
    let by=y+Math.max(6,ls.length*4.2);
@@ -195,9 +197,9 @@ window.imprimirPedido=async function(id){
      if(img){
        try{
          // Tamanho físico maior no A4 para preservar a largura mínima das barras.
-         pdf.addImage(img,'PNG',M+50,by,78,24,undefined,'NONE');
+         pdf.addImage(img,'PNG',M+50,by,42,27,undefined,'NONE');
        }catch(e){console.error(e)}
-     }else T(bc,M+50,by+4,8);
+     }else T(bc+' - CÓDIGO NÃO GERADO',M+50,by+4,8);
    }else{
      T('SEM CÓDIGO DE BARRAS',M+50,by+4,7,true);
    }
