@@ -1,17 +1,16 @@
-CORREÇÃO 2 — LEITURA DO CÓDIGO DE BARRAS
+ENVIOCD — PDF COMPACTO + PEDIDOS ZERADOS NA TELA
 
-Diagnóstico da planilha COD.xlsx:
-- 117 códigos possuem 13 dígitos e todos os 117 passam no dígito verificador EAN-13.
-- Há também registros de 2 e 3 dígitos na coluna "Código Barra"; esses números NÃO são códigos de barras EAN e não podem ser transformados em um EAN bipável sem o GTIN/EAN real do produto.
-- Há 3 códigos de 14 dígitos, tratados como CODE128 nesta versão.
+PDF:
+- Cabeçalho e logo menores.
+- Espaços verticais reduzidos.
+- Mais produtos cabem em cada folha.
+- Código de barras mantém 42 mm de largura, pois essa foi a versão confirmada como legível.
 
-Correção técnica:
-- EAN-13 verdadeiro para os 117 GTINs válidos.
-- Renderização em canvas de alta resolução.
-- PDF sem esticar o raster: largura física aproximada de 42 mm.
-- Quiet zones brancas ampliadas.
-- Códigos curtos não geram mais uma barra falsa.
+PEDIDOS:
+- A tela inicia um novo ciclo sem mostrar os pedidos anteriores.
+- Os pedidos antigos NÃO foram apagados do Firebase.
+- Isso respeita a exigência de que o histórico nunca seja perdido.
+- Novos pedidos aparecem normalmente.
 
 PUBLICAÇÃO:
 Substitua somente index.html no GitHub, aguarde o deploy verde e faça Ctrl+F5.
-Para validar, teste primeiro um produto cujo código comece com 789 e tenha 13 dígitos.
